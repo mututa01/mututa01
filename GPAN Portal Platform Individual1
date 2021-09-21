@@ -1,0 +1,53 @@
+frappe.ui.form.on('GPAN Portal Platform Individual1', {
+          validate:  function(frm) {
+        	// make calculation on the fields  
+           var a = frm.doc.price + frm.doc.monthly_contributions;
+    		
+    		frm.set_value("total_usd_contribution", a);
+    		frm.refresh_field("total_usd_contribution");
+    		
+    		var b = frm.doc.monthly + frm.doc.monthly_contributions;
+    		frm.set_value("grand_crowning", b);
+    		frm.refresh_field("grand_crowning"); 
+        	    
+        	
+    
+        }
+    });
+    
+    frappe.ui.form.on("GPAN Portal Platform Individual1",{
+      before_save:  function(frm) {
+        if(frm.doc.grand_crowning <= 9) {
+            frm.set_value("crown_type","No Earned Crown");
+            
+        }else if (frm.doc.grand_crowning <= 19){
+            
+            frm.set_value("crown_type","One Star Crown");
+            
+        }else if(frm.doc.grand_crowning <= 29) {
+            frm.set_value("crown_type","Two Star Crown");
+            
+        } else if(frm.doc.grand_crowning >= 30) {
+            frm.set_value("crown_type","Three Star Crown");
+        
+        }else {
+            frm.set_value("crown_type", "No Earned Crown");
+        
+        }
+    }
+});
+
+frappe.ui.form.on("GPAN Portal Platform Individual1", "symptoms_select", function(frm) {
+	if(frm.doc.symptoms_select){
+		var symptoms = null;
+		if(frm.doc.symptoms)
+			symptoms = frm.doc.symptoms + "\n" +frm.doc.symptoms_select;
+		else
+			symptoms = frm.doc.symptoms_select;
+		frappe.model.set_value(frm.doctype,frm.docname, "symptoms", symptoms);
+		frappe.model.set_value(frm.doctype,frm.docname, "symptoms_select", null);
+	}
+});
+
+
+    
